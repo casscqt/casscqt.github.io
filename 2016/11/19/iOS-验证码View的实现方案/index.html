@@ -1,0 +1,614 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。
+
+
+尝试方案一开始实现时，我添加4个textField作为这4个验证码的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 验证码View的实现方案">
+<meta property="og:url" content="https://casscqt.github.io/2016/11/19/iOS-验证码View的实现方案/index.html">
+<meta property="og:site_name" content="Cass的博客">
+<meta property="og:description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。
+
+
+尝试方案一开始实现时，我添加4个textField作为这4个验证码的">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-b6520d0f79104517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-d5343f740e29e9df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-71b27fc32f5214ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-19T13:09:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 验证码View的实现方案">
+<meta name="twitter:description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。
+
+
+尝试方案一开始实现时，我添加4个textField作为这4个验证码的">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/132693-b6520d0f79104517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://casscqt.github.io/2016/11/19/iOS-验证码View的实现方案/"/>
+
+  <title> iOS 验证码View的实现方案 | Cass的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Cass的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS 验证码View的实现方案
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-19T21:08:46+08:00" content="2016-11-19">
+              2016-11-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/19/iOS-验证码View的实现方案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/19/iOS-验证码View的实现方案/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/132693-b6520d0f79104517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300" alt="需求效果图.png"></p>
+<h1 id="尝试方案"><a href="#尝试方案" class="headerlink" title="尝试方案"></a>尝试方案</h1><p>一开始实现时，我添加4个textField作为这4个验证码的显示与输入。接着添加响应事件与代理实现输入一个验证码后，焦点跳转下一个验证码。正向流程没有问题，但在使用退格键时，焦点需要回到上一个。这里就出现了一个坑，textField内容为空，监听不到退格键的使用。网上也搜寻相关方案，但是都没有好的办法。看到一个做法是插入在textField为空，插入一个字符（一个没有显示宽度的字符），此时再按退格键就可以监听删除内容。</p>
+<h1 id="推荐方案"><a href="#推荐方案" class="headerlink" title="推荐方案"></a>推荐方案</h1><p>在网上查找相关实现的方案，参考不多，笔者看到了一个<a href="http://www.jb51.net/article/77841.htm" target="_blank" rel="external">链接</a>，如果还有更好推荐留言一下。<br>实现原理是：使用一个Label来显示每一位验证码。使用一个隐藏TextField来接收输入。将TextField上编辑的内容显示到Label上。这样就不会有太多交互细节需要处理，就像这个验证码的View是一个TextField一样（实际上也是）。</p>
+<h1 id="封装与使用"><a href="#封装与使用" class="headerlink" title="封装与使用"></a>封装与使用</h1><p>笔者将它进行了整理与封装优化：</p>
+<ul>
+<li>适用于带边框显示的验证码样式。</li>
+<li>Label 显示drawRect时，添加边框，边框默认是显示矩形区域外部的，进行了处理，显示在矩形区域内。  </li>
+<li>添加间距，边框宽度等参数，正确显示边框与文本。</li>
+<li>优化支持xib中使用控件。</li>
+<li>优化支持xcode及时显示UI。</li>
+<li>接口简单易用。</li>
+</ul>
+<p>文件结构：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/132693-d5343f740e29e9df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300" alt="文件结构.png"></p>
+<p>封装的Label:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">- (void)drawRect:(CGRect)rect &#123;</div><div class="line">    </div><div class="line">    // 第一次drawRect rect的数值不正确，不知道为什么，麻烦有知道的issue下我。这里处理了一下。</div><div class="line">    rect.size.width = rect.size.width &gt; self.bounds.size.width ? self.bounds.size.width : rect.size.width;</div><div class="line">    rect.size.height = rect.size.height &gt; self.bounds.size.height ? self.bounds.size.height : rect.size.height;</div><div class="line">    </div><div class="line">    //计算每位验证码/密码的所在区域的宽和高</div><div class="line">    float width = (rect.size.width - (self.numberOfVertificationCode -1) * self.spacing)/ (float)self.numberOfVertificationCode;;</div><div class="line">    float height = rect.size.height;</div><div class="line">    </div><div class="line">    // 画矩形边框 （边框会显示到rect区域外，进行了处理）</div><div class="line">    for (int i = 0; i &lt; self.numberOfVertificationCode; i++) &#123;</div><div class="line">        // 计算每位验证码/密码的绘制区域</div><div class="line">        CGRect tempRect = CGRectMake(i * (width +self.spacing) + self.lineWidth, self.lineWidth, width - self.lineWidth*2, height - self.lineWidth*2);</div><div class="line">        CGContextRef context = UIGraphicsGetCurrentContext();</div><div class="line">        CGContextSetLineWidth(context, self.lineWidth);</div><div class="line">        CGContextSetStrokeColorWithColor(context, self.borderColor.CGColor);</div><div class="line">        UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:tempRect cornerRadius:self.cornerRadius];</div><div class="line">        CGContextAddPath(context, bezierPath.CGPath);</div><div class="line">        CGContextStrokePath(context);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    // 将每位验证码/密码绘制到指定区域</div><div class="line">    for (int i = 0; i &lt; self.text.length; i++) &#123;</div><div class="line">        CGRect tempRect = CGRectMake(i * (width +self.spacing) +self.lineWidth, self.lineWidth, width - self.lineWidth * 2, height - self.lineWidth*2);</div><div class="line">        // 遍历验证码/密码的每个字符</div><div class="line">        NSString *charecterString = [NSString stringWithFormat:@&quot;%c&quot;, [self.text characterAtIndex:i]];</div><div class="line">        // 设置验证码/密码的现实属性</div><div class="line">        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];</div><div class="line">        attributes[NSFontAttributeName] = self.font;</div><div class="line">        attributes[NSForegroundColorAttributeName] = self.textColor;</div><div class="line">        // 计算每位验证码的绘制起点</div><div class="line">        // 计算每位验证码的在指定样式下的size</div><div class="line">        CGSize characterSize = [charecterString sizeWithAttributes:attributes];</div><div class="line">        CGPoint vertificationCodeDrawStartPoint = CGPointMake(CGRectGetMidX(tempRect) - characterSize.width /2, CGRectGetMidY(tempRect) - characterSize.height /2);</div><div class="line">        // 绘制验证码</div><div class="line">        [charecterString drawAtPoint:vertificationCodeDrawStartPoint withAttributes:attributes];   </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>xib中使用：<br>直接拖一个view，修改xib中类名即可，可通过如图设置属性。<br><img src="http://upload-images.jianshu.io/upload_images/132693-71b27fc32f5214ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="xib内使用.png"><br>代码中使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">- (QTVertificationCodeInputView *)vertificationCodeInputView&#123;</div><div class="line">    if (!_vertificationCodeInputView) &#123;</div><div class="line">        _vertificationCodeInputView = [[QTVertificationCodeInputView alloc]initWithFrame:CGRectMake(30, 100, 300, 200)];</div><div class="line">        _vertificationCodeInputView.numberOfVertificationCode = 4;</div><div class="line">        _vertificationCodeInputView.lineWidth = 10;</div><div class="line">        _vertificationCodeInputView.spacing = 10;</div><div class="line">        _vertificationCodeInputView.cornerRadius = 5;</div><div class="line">        _vertificationCodeInputView.backgroundColor = [UIColor orangeColor];</div><div class="line">    &#125;</div><div class="line">    return _vertificationCodeInputView;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h1><p>UILabel初始化第一次调用的drawRect，rect的值并不是设置frame的值，而是稍微大了一点，不知道为什么不对，麻烦有知道的issue下我。这里处理了一下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)drawRect:(CGRect)rect &#123;</div><div class="line">    // 第一次drawRect rect的数值不正确，不知道为什么，麻烦有知道的issue下我。这里处理了一下。</div><div class="line">    rect.size.width = rect.size.width &gt; self.bounds.size.width ? self.bounds.size.width : rect.size.width;</div><div class="line">    rect.size.height = rect.size.height &gt; self.bounds.size.height ? self.bounds.size.height : rect.size.height;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>工程文件在github上：<a href="https://github.com/casscqt/QTVertificationCodeInputView" target="_blank" rel="external">https://github.com/casscqt/QTVertificationCodeInputView</a><br>参考链接：<a href="http://www.jb51.net/article/77841.htm" target="_blank" rel="external">这里</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/30/iOS-Label最后一行中间截图显示缩略符/" rel="next" title="iOS Label最后一行中间截图显示缩略符">
+                <i class="fa fa-chevron-left"></i> iOS Label最后一行中间截图显示缩略符
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/19/iOS-验证码View的实现方案/"
+           data-title="iOS 验证码View的实现方案" data-url="https://casscqt.github.io/2016/11/19/iOS-验证码View的实现方案/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xiohr.com1.z0.glb.clouddn.com/favicon.ico"
+               alt="Cass" />
+          <p class="site-author-name" itemprop="name">Cass</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#尝试方案"><span class="nav-number">1.</span> <span class="nav-text">尝试方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#推荐方案"><span class="nav-number">2.</span> <span class="nav-text">推荐方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#封装与使用"><span class="nav-number">3.</span> <span class="nav-text">封装与使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#疑问"><span class="nav-number">4.</span> <span class="nav-text">疑问</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cass</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cass"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
