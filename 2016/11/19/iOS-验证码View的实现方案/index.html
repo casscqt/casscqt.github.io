@@ -84,28 +84,19 @@
 
 
 
-<meta name="description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。
-
-
-尝试方案一开始实现时，我添加4个textField作为这4个验证码的">
+<meta name="description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS 验证码View的实现方案">
 <meta property="og:url" content="https://casscqt.github.io/2016/11/19/iOS-验证码View的实现方案/index.html">
 <meta property="og:site_name" content="Cass的博客">
-<meta property="og:description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。
-
-
-尝试方案一开始实现时，我添加4个textField作为这4个验证码的">
+<meta property="og:description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-b6520d0f79104517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-d5343f740e29e9df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-71b27fc32f5214ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2016-11-19T13:11:53.000Z">
+<meta property="og:updated_time" content="2016-12-03T07:06:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 验证码View的实现方案">
-<meta name="twitter:description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。
-
-
-尝试方案一开始实现时，我添加4个textField作为这4个验证码的">
+<meta name="twitter:description" content="本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。">
 <meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/132693-b6520d0f79104517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300">
 
 
@@ -299,7 +290,7 @@
         <blockquote>
 <p>本以为实现一个输入验证码的界面是很容易，但是没想到交互起来还是挺麻烦的。例如下图的验证码输入校验，在许多场景下会使用到类似验证码显示与输入。这里记录一下实现的过程，踩过的坑与比较好的方案。这个过程重新去了解了drawRect方法，使用了IBInspectable和IB_DESIGNABLE，封装控件（代码与xib都可用)。</p>
 </blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/132693-b6520d0f79104517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300" alt="需求效果图.png"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/132693-b6520d0f79104517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/300" alt="需求效果图.png"><br><a id="more"></a></p>
 <h1 id="尝试方案"><a href="#尝试方案" class="headerlink" title="尝试方案"></a>尝试方案</h1><p>一开始实现时，我添加4个textField作为这4个验证码的显示与输入。接着添加响应事件与代理实现输入一个验证码后，焦点跳转下一个验证码。正向流程没有问题，但在使用退格键时，焦点需要回到上一个。这里就出现了一个坑，textField内容为空，监听不到退格键的使用。网上也搜寻相关方案，但是都没有好的办法。看到一个做法是插入在textField为空，插入一个字符（一个没有显示宽度的字符），此时再按退格键就可以监听删除内容。</p>
 <h1 id="推荐方案"><a href="#推荐方案" class="headerlink" title="推荐方案"></a>推荐方案</h1><p>在网上查找相关实现的方案，参考不多，笔者看到了一个<a href="http://www.jb51.net/article/77841.htm" target="_blank" rel="external">链接</a>，如果还有更好推荐留言一下。<br>实现原理是：使用一个Label来显示每一位验证码。使用一个隐藏TextField来接收输入。将TextField上编辑的内容显示到Label上。这样就不会有太多交互细节需要处理，就像这个验证码的View是一个TextField一样（实际上也是）。</p>
 <h1 id="封装与使用"><a href="#封装与使用" class="headerlink" title="封装与使用"></a>封装与使用</h1><p>将它进行了整理与封装优化：</p>
