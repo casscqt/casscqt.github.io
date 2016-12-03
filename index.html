@@ -235,6 +235,116 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/03/零碎笔记/" itemprop="url">
+                  零碎笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-03T15:05:01+08:00" content="2016-12-03">
+              2016-12-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/03/零碎笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/03/零碎笔记/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="RunLoop"><a href="#RunLoop" class="headerlink" title="RunLoop"></a>RunLoop</h3><p>一，什么是runloop?</p>
+<ul>
+<li>1、runloop从字面来说是指：运行循环。  </li>
+<li>2、在代码实现上，runloop内部实质上是一个do-while循环。会不断的检测source、observer、timer等事件。  </li>
+<li>3、runloop要保活，必须要在指定的mode里面添加事件源 (source,timer)</li>
+<li>4、在OC里，runloop的使用是懒加载，当第一次调用[NSRunLoop currentRunLoop]时，内部会自动创建一个runloop，并且在创建子线程的runloop时，首先就会检测主线程的runloop是否已存在，不存在也会创建，所以iOS里面主线程和主运行循环系统会自动帮我们创建好。  </li>
+</ul>
+<p>二、runloop与线程的关系？<br>一个线程对应一个runloop，在源码内部，线程作为key、runloop作为value.<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/12/03/零碎笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/11/19/iOS-验证码View的实现方案/" itemprop="url">
                   iOS 验证码View的实现方案
                 </a>
@@ -746,7 +856,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
