@@ -84,31 +84,20 @@
 
 
 
-<meta name="description" content="RunLoop一，什么是runloop?
-
-1、runloop从字面来说是指：运行循环。  
-2、在代码实现上，runloop内部实质上是一个do-while循环。会不断的检测source、observer、timer等事件。  
-3、runloop要保活，必须要在指定的mode里面添加事件源 (source,timer)
-4、在OC里，runloop的使用是懒加载，当第一次调用[NSRunLoo">
+<meta name="description" content="前言：经常遇到这样的需求：从有导航栏的界面跳转到导航栏透明的界面，由于iOS从有导航栏跳转到透明导航栏界面，并且设置hideBottomWhenPush属性会有bug，即导航栏会有黑影。我采取将导航栏控制的navigationbar进行隐藏，自己在viewcontroller添加一个navigationbar以实现需求。过程中没有理解清楚navigationbar和navigationItem，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="零碎笔记">
-<meta property="og:url" content="https://casscqt.github.io/2016/12/03/零碎笔记/index.html">
+<meta property="og:title" content="iO 关于NavigationBar、NavigationItem的记录">
+<meta property="og:url" content="https://casscqt.github.io/2016/12/15/iO-关于NavigationBar、NavigationItem的记录/index.html">
 <meta property="og:site_name" content="Cass的博客">
-<meta property="og:description" content="RunLoop一，什么是runloop?
-
-1、runloop从字面来说是指：运行循环。  
-2、在代码实现上，runloop内部实质上是一个do-while循环。会不断的检测source、observer、timer等事件。  
-3、runloop要保活，必须要在指定的mode里面添加事件源 (source,timer)
-4、在OC里，runloop的使用是懒加载，当第一次调用[NSRunLoo">
-<meta property="og:updated_time" content="2016-12-03T07:05:29.000Z">
+<meta property="og:description" content="前言：经常遇到这样的需求：从有导航栏的界面跳转到导航栏透明的界面，由于iOS从有导航栏跳转到透明导航栏界面，并且设置hideBottomWhenPush属性会有bug，即导航栏会有黑影。我采取将导航栏控制的navigationbar进行隐藏，自己在viewcontroller添加一个navigationbar以实现需求。过程中没有理解清楚navigationbar和navigationItem，">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-6058a24ae2b6d17a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-92f2fccb1d9f793f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/132693-721aa1698ae761d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-12-15T03:43:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="零碎笔记">
-<meta name="twitter:description" content="RunLoop一，什么是runloop?
-
-1、runloop从字面来说是指：运行循环。  
-2、在代码实现上，runloop内部实质上是一个do-while循环。会不断的检测source、observer、timer等事件。  
-3、runloop要保活，必须要在指定的mode里面添加事件源 (source,timer)
-4、在OC里，runloop的使用是懒加载，当第一次调用[NSRunLoo">
+<meta name="twitter:title" content="iO 关于NavigationBar、NavigationItem的记录">
+<meta name="twitter:description" content="前言：经常遇到这样的需求：从有导航栏的界面跳转到导航栏透明的界面，由于iOS从有导航栏跳转到透明导航栏界面，并且设置hideBottomWhenPush属性会有bug，即导航栏会有黑影。我采取将导航栏控制的navigationbar进行隐藏，自己在viewcontroller添加一个navigationbar以实现需求。过程中没有理解清楚navigationbar和navigationItem，">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/132693-6058a24ae2b6d17a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -129,9 +118,9 @@
 
 
 
-  <link rel="canonical" href="https://casscqt.github.io/2016/12/03/零碎笔记/"/>
+  <link rel="canonical" href="https://casscqt.github.io/2016/12/15/iO-关于NavigationBar、NavigationItem的记录/"/>
 
-  <title> 零碎笔记 | Cass的博客 </title>
+  <title> iO 关于NavigationBar、NavigationItem的记录 | Cass的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -251,7 +240,7 @@
             
             
               
-                零碎笔记
+                iO 关于NavigationBar、NavigationItem的记录
               
             
           </h1>
@@ -263,8 +252,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-03T15:05:01+08:00" content="2016-12-03">
-              2016-12-03
+            <time itemprop="dateCreated" datetime="2016-12-15T11:43:29+08:00" content="2016-12-15">
+              2016-12-15
             </time>
           </span>
 
@@ -274,8 +263,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/12/03/零碎笔记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/03/零碎笔记/" itemprop="commentsCount"></span>
+                <a href="/2016/12/15/iO-关于NavigationBar、NavigationItem的记录/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/15/iO-关于NavigationBar、NavigationItem的记录/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -298,28 +287,21 @@
       
 
       
-        <h3 id="RunLoop"><a href="#RunLoop" class="headerlink" title="RunLoop"></a>RunLoop</h3><p>一，什么是runloop?</p>
-<ul>
-<li>1、runloop从字面来说是指：运行循环。  </li>
-<li>2、在代码实现上，runloop内部实质上是一个do-while循环。会不断的检测source、observer、timer等事件。  </li>
-<li>3、runloop要保活，必须要在指定的mode里面添加事件源 (source,timer)</li>
-<li>4、在OC里，runloop的使用是懒加载，当第一次调用[NSRunLoop currentRunLoop]时，内部会自动创建一个runloop，并且在创建子线程的runloop时，首先就会检测主线程的runloop是否已存在，不存在也会创建，所以iOS里面主线程和主运行循环系统会自动帮我们创建好。  </li>
-</ul>
-<p>二、runloop与线程的关系？<br>一个线程对应一个runloop，在源码内部，线程作为key、runloop作为value.<br><a id="more"></a><br>三、runloop有哪些mode?区分这些mode的好处？<br>苹果公开的有：NSDefaultRunLoopMode (对应 kCFRunLoopDefaultMode) （主运行循环默认就在这个模式）NSRunLoopCommonModes（对应 kCFRunLoopCommonModes）这个并不是真正的模式，他是一组mode，打上common标记的mode有（NSDefaultRunLoopMode和UITrackingRunLoopMode）苹果没有公开的mode主要是UITrackingRunLoopMode<br>分开多个mode的好处是能够让runloop在同一时刻处理一种类型的事件（也就是方便分别事件等级）。比如用户处理拖拽事件的时候，runloop就专心处理TrackingMode。  </p>
-<p>四、runloop的实际使用场景有哪些？</p>
-<ul>
-<li>1、实现一个常驻子线程。像系统的主线程就是一个常驻线程。实现子线程常驻就需要在子线程创建一个runloop，并且要保活这个runloop.(也就是在这个runloop中添加事件，比如source、observer、timer)  </li>
-<li>2、改变runloop的mode，比如定时器创建时，默认是在NSDefaultRunLoopMode下面，如果要能够在拖拽模式下也能执行，需要改变定时器的runmode。另外NSURLConnection默认也是放在默认模式下，在tableView滑动的时候，要想能够下载，也需要改变runmode。     </li>
-</ul>
-<p>参考地址：<br><a href="http://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="external">http://blog.ibireme.com/2015/05/18/runloop/</a><br><a href="http://www.jianshu.com/p/d260d18dd551" target="_blank" rel="external">http://www.jianshu.com/p/d260d18dd551</a><br>常驻子线程创建：<a href="http://www.jianshu.com/p/0b082ab5a494" target="_blank" rel="external">http://www.jianshu.com/p/0b082ab5a494</a><br>比较容易理解且好的文章：<a href="http://www.cnblogs.com/zy1987/p/4582466.html" target="_blank" rel="external">http://www.cnblogs.com/zy1987/p/4582466.html</a></p>
-<h3 id="内链函数"><a href="#内链函数" class="headerlink" title="内链函数"></a>内链函数</h3><p>一、作用：<br>解决函数调用效率的问题</p>
-<ul>
-<li>函数之间调用，是内存地址之间的调用，当函数调用完毕之后还会返回原来函数执行的地址。函数调用有时间开销，内联函数就是为了解决这一问题。</li>
-<li>不用inline修饰的函数, 汇编时会出现 call 指令.调用call指令就是就需要：<br>(1)将下一条指令的所在地址入栈<br>(2)并将子程序的起始地址送入PC（于是CPU的下一条指令就会转去执行子程序）.</li>
-</ul>
-<p>二、使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">// 或者采用系统的宏 UIKIT_STATIC_INLINE</div><div class="line">// UIKIT_STATIC_INLINECGFloat CGFloatFromPixel(CGFloat value) &#123;</div><div class="line">//     return value / YYScreenScale();</div><div class="line">// &#125;</div><div class="line">static inline CGFloat CGFloatFromPixel(CGFloat value) &#123;</div><div class="line">    return value / YYScreenScale();</div><div class="line">&#125;</div><div class="line"></div><div class="line">//YYScreenScale()方法说明:</div><div class="line">CGFloat YYScreenScale() &#123;</div><div class="line">    static CGFloat scale;</div><div class="line">    static dispatch_once_t onceToken;</div><div class="line">    dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">        scale = [UIScreen mainScreen].scale;</div><div class="line">    &#125;);</div><div class="line">    return scale;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>三、使用场景：<br>适合与小内存函数，频繁执行的函数。</p>
-<p>四、参考地址：<br><a href="http://www.cnblogs.com/sixindev/p/4469144.html" target="_blank" rel="external">http://www.cnblogs.com/sixindev/p/4469144.html</a><br><a href="http://www.jianshu.com/p/d557b0831c6a" target="_blank" rel="external">http://www.jianshu.com/p/d557b0831c6a</a><br><a href="http://www.jianshu.com/p/a4b77a1157b1" target="_blank" rel="external">http://www.jianshu.com/p/a4b77a1157b1</a></p>
+        <blockquote>
+<p>前言：经常遇到这样的需求：从有导航栏的界面跳转到导航栏透明的界面，由于iOS从有导航栏跳转到透明导航栏界面，并且设置hideBottomWhenPush属性会有<a href="http://www.jianshu.com/p/e3ca1b7b6cec" target="_blank" rel="external">bug</a>，即导航栏会有黑影。我采取将导航栏控制的navigationbar进行隐藏，自己在viewcontroller添加一个navigationbar以实现需求。过程中没有理解清楚navigationbar和navigationItem，这里简单记录一下。</p>
+</blockquote>
+<h2 id="NavigationBar"><a href="#NavigationBar" class="headerlink" title="NavigationBar"></a>NavigationBar</h2><blockquote>
+<p>The navigation bar displays information from a stack of UINavigationItem objects. At any given time, the UINavigationItem that is currently the topItem of the stack determines the title and other optional information in the navigation bar, such as the right button and prompt.</p>
+</blockquote>
+<p>翻译：navigationbar 展示通过一个栈对象navgationItem来展示信息，栈顶的navgationItem对象决定着导航标题和其他信息，例如导航栏右边提示按钮。</p>
+<p>这里可以得知如果想管理navigationbar上面的左右按钮，标题信息，则需要创建一个navigationItem对象，对navigationItem进行设置后再push,pop等操作进入到navigationbar的栈中。而如果管理样式，则通过属性控制或者修改子控件。navigationbar的层级结构如下：<br><img src="http://upload-images.jianshu.io/upload_images/132693-6058a24ae2b6d17a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="navigationbar层级结构.png"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/132693-92f2fccb1d9f793f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>结构中看出：<br>默认navigationbar高度为44点，但navigationbar的View却有84点的高度，iOS7以后对背景进行了延伸。View中有背景图View、底部线条View还有图中红色框部分的按钮等控件。设置导航栏透明经常对背景图与底部线条设置为透明的图片。</p>
+<p>navigationController下默认有一个navigationBar，这是navigationController管理下所有viewcontroller共用的。对于某个页面设置导航栏透明，滑动渐变效果，可以让navigationController的隐藏掉，自己给每个viewcontroller增加一个navigationBar，对这个navigationBar进行处理。退出界面后将导航栏恢复显示。这个方案也是上面推荐链接一个方案之一。这样可以避免一些因为设置导航栏透明，在界面中跳转带来的系统bug。</p>
+<h2 id="NavigationItem"><a href="#NavigationItem" class="headerlink" title="NavigationItem"></a>NavigationItem</h2><p><img src="http://upload-images.jianshu.io/upload_images/132693-721aa1698ae761d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="NavigationItem属性.png"><br>NavigationItem是UIViewController的属性，这也是导航器管理下的viewcontroller中进行设置的原因：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.navigationItem.title = @&quot;title&quot;;</div></pre></td></tr></table></figure></p>
+<p>而不是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.navigationController.navigationItem.title = @&quot;title&quot;;</div></pre></td></tr></table></figure></p>
+<p>思考了一下navigationItem为什么是viewcontroller的属性，而不是navigationbar的属性呢？因为navigationbar是栈的方式管理navigationItem。navigationcontroller每次push或者pop一个viewcontroller，其实也执行了对navigationbar执行了push or pop item。这样每个viewcontroller拥有自己的navigationItem，则可以订制自己的页面导航栏。</p>
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><p>1.<a href="http://www.jianshu.com/p/e3ca1b7b6cec" target="_blank" rel="external">http://www.jianshu.com/p/e3ca1b7b6cec</a></p>
 
       
     </div>
@@ -345,17 +327,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/19/iOS-验证码View的实现方案/" rel="next" title="iOS 验证码View的实现方案">
-                <i class="fa fa-chevron-left"></i> iOS 验证码View的实现方案
+              <a href="/2016/12/03/零碎笔记/" rel="next" title="零碎笔记">
+                <i class="fa fa-chevron-left"></i> 零碎笔记
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/15/iO-关于NavigationBar、NavigationItem的记录/" rel="prev" title="iO 关于NavigationBar、NavigationItem的记录">
-                iO 关于NavigationBar、NavigationItem的记录 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -381,8 +359,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/12/03/零碎笔记/"
-           data-title="零碎笔记" data-url="https://casscqt.github.io/2016/12/03/零碎笔记/">
+      <div class="ds-thread" data-thread-key="2016/12/15/iO-关于NavigationBar、NavigationItem的记录/"
+           data-title="iO 关于NavigationBar、NavigationItem的记录" data-url="https://casscqt.github.io/2016/12/15/iO-关于NavigationBar、NavigationItem的记录/">
       </div>
     
   </div>
@@ -459,7 +437,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#RunLoop"><span class="nav-number">1.</span> <span class="nav-text">RunLoop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内链函数"><span class="nav-number">2.</span> <span class="nav-text">内链函数</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#NavigationBar"><span class="nav-number">1.</span> <span class="nav-text">NavigationBar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NavigationItem"><span class="nav-number">2.</span> <span class="nav-text">NavigationItem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关链接"><span class="nav-number">3.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
             
           </div>
         </section>
